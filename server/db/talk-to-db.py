@@ -10,6 +10,7 @@ CLOUD_SQL_USERNAME = os.getenv('CLOUD_SQL_USERNAME', default=None)
 CLOUD_SQL_PASSWORD = os.getenv('CLOUD_SQL_PASSWORD', default=None)
 CLOUD_SQL_DATABASE_NAME = os.getenv('CLOUD_SQL_DATABASE_NAME', default=None)
 CLOUD_SQL_CONNECTION_NAME = os.getenv('CLOUD_SQL_CONNECTION_NAME', default=None)
+CLOUD_SQL_PORT = os.getenv('CLOUD_SQL_PORT', default=None)
 
 
 def open_connection():
