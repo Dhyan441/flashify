@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-body{
-    background: #f1f1f1;
+@layer components {
+  .sidebar-icon {
+    @apply relative flex items-center justify-center h-16 w-16 mt-4 mb-4 mx-auto shadow-lg bg-primary-main text-secondary-light hover:bg-primary-dark rounded-2xl hover:rounded-md transition-all duration-300 ease-linear cursor-pointer;
+  }
+  .sidebar-icon-top{
+    @apply relative flex items-center justify-center drop-shadow-2xl   h-16 w-16 mt-auto mb-auto ml-auto mr-10 shadow-lg bg-primary-main text-secondary-light hover:bg-primary-dark rounded-2xl hover:rounded-md transition-all duration-300 ease-linear cursor-pointer;
+
+  }
+}
+
+body {
+  background: #f1f1f1;
 }
