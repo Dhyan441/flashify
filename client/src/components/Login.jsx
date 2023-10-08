@@ -1,10 +1,37 @@
 import React, { useState } from 'react';
+import axios from '../requests/axios';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const toggleCard = () => {
     setIsLogin(!isLogin);
+  };
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleLogin = async () => {
+    try {
+      const apiUrl = '/login'; 
+      const requestData = {
+        email: email,
+        password: password,
+      };
+
+      const response = await axios.post(apiUrl, requestData);
+
+      console.log('Login response:', response.data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   return (
@@ -15,11 +42,23 @@ const Login = () => {
           <p className='font-medium text-lg text-gray-500 mt-4'>{isLogin ? 'Welcome back! Please sign in.' : 'Join us today! Create an account.'}</p>
           <div className="mt-8">
             <label className='text-lg font-medium'>Email</label>
-            <input className='w-full bottom-2 border border-gray-500 rounded-xl p-4 mt-1 bg-transparent' placeholder='Enter your email'></input>
+            <input
+              type="text"
+              placeholder="Enter your email"
+              className='w-full bottom-2 border border-gray-500 rounded-xl p-4 mt-1 bg-transparent'
+              value={email}
+              onChange={handleEmailChange}
+            />
           </div>
           <div className="mt-8">
             <label className='text-lg font-medium'>Password</label>
-            <input className='w-full bottom-2 rounded-xl p-4 mt-1 bg-transparent border border-gray-500' placeholder='Enter your password'></input>
+            <input
+              type="password"
+              placeholder="Enter your password"
+              className='w-full bottom-2 rounded-xl p-4 mt-1 bg-transparent border border-gray-500'
+              value={password}
+              onChange={handlePasswordChange}
+            />
           </div>
           <div className='mt-8 flex justify-between items-center'>
             <div>
@@ -31,7 +70,8 @@ const Login = () => {
             ) : null}
           </div>
           <div className='mt-8 flex flex-col gap-y-4'>
-            <button
+              <button
+              onClick={handleLogin} 
               className='active:scale-[.98] active:duration-75 hover:scale-[1.02] ease-in-out transition-all py-3 rounded-xl bg-violet-500 text-white text-lg font-bold'
             >
               {isLogin ? 'Sign in' : 'Sign up'}
