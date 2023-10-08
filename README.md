@@ -1,3 +1,6 @@
+## Demo video
+https://youtu.be/m_ssQyUoHwE
+
 
 ## Inspiration
 The inspiration behind "Flashify" sprouted from our collective desire to optimize our study habits. We recognized the effectiveness of active recall in retaining information, and we wanted to bridge the gap between traditional handwritten notes and modern digital learning tools. Our goal was to develop a solution that would convert handwritten notes into digital flashcards, making it easier for students and learners to test themselves on the material.
