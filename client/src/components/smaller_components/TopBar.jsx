@@ -21,7 +21,7 @@ const SideBarIcon = ({ icon }) => {
         }
     } catch (e) {
         console.log(e)
-        navigate('/error')
+        // navigate('/')
     }
   };
   return (

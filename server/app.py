@@ -40,7 +40,6 @@ jwt = JWTManager(app)
 
 revoked_tokens = set()
 
-@token_in_blacklist_loader()
 def is_token_revoked(decoded_token):
     jti = decoded_token['jti']
     return jti in revoked_tokens

@@ -6,7 +6,7 @@ const Deck = ({ deck }) => {
       <h3 className="text-xl font-semibold mb-2">{deck.name}</h3>
       <p className="text-primary-dark">{deck.createdAt}</p>
       <a
-        href="/app/study"
+        href={"/app/study?deck=" + deck.deck_id}
         className="mt-2 bg-primary-light hover:bg-primary-dark text-primary-background font-semibold py-2 px-4 rounded-full inline-block"
       >
         Study Now
