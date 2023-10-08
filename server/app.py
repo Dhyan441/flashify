@@ -53,10 +53,9 @@ def login():
         if user and bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8')):
             session['user_id'] = user['_id']
             session['authenticated'] = True
-            return jsonify({"message": "Login successful"}), 200
+            return jsonify({"message": "Login successful."}), 200
         else:
             return jsonify({"message": "Invalid credentials"}), 401
-
 
 # signup
 @app.route('/signup', methods=['GET', 'POST'])
@@ -80,13 +79,6 @@ def signup():
         connection.commit()
         return jsonify({"message": "User registered successfully!"}), 200
 
-# logout
-@app.route('/logout', methods=['GET', 'POST'])
-def logout():
-    session.pop('user_id', None)
-    session.pop('authenticated')
-    return jsonify({"message": "Logout successful!"}), 200
-
 # login required
 def loginRequired(func):
     @wraps(func)
@@ -95,6 +87,14 @@ def loginRequired(func):
             return jsonify({"message": "Unauthorized!"}), 401
         return func(*args, **kwargs)
     return decorated_function
+
+# logout
+@app.route('/logout', methods=['GET', 'POST'])
+@loginRequired
+def logout():
+    session.pop('user_id', None)
+    session.pop('authenticated')
+    return jsonify({"message": "Logout successful!"}), 200
 
 # get users 
 @app.route('/users', methods=['GET'])
@@ -172,11 +172,59 @@ def deleteDeck():
         deck_id = data['deck_id']
         user = session['user_id']
 
+        # Assuming deck_id is the ID of the deck you want to delete
+        cursor.execute('DELETE FROM Cards WHERE deck = %s', (deck_id,))
+        connection.commit()
+
         cursor.execute('DELETE FROM Decks WHERE deck_id = %s AND user = %s',
                         (deck_id, user))
         connection.commit()
 
-        return jsonify({"message": "Deck updated successfully."}), 201
+        return jsonify({"message": "Deck deleted successfully."}), 201
     except Exception as e:
         return jsonify({"message": "Failed to delete deck", "error": str(e)}), 500
+    
+# get decks
+@app.route('/decks', methods=['GET'])
+@loginRequired
+def getDecks():
+    try:
+        user = session['user_id']
 
+        decks = getDecksFromUser(user)
+        return jsonify(decks)
+    except Exception as e:
+        return jsonify({"message": "Failed to get decks", "error": str(e)}), 500
+    
+# get cards from deck
+@app.route('/cards', methods=['GET'])
+@loginRequired
+def getCards():
+    try:
+        deck = request.args.get('deck')
+
+        decks = getCardsFromDeck(deck)
+
+        return jsonify(decks)
+    except Exception as e:
+        return jsonify({"message": "Failed to get decks", "error": str(e)}), 500
+    
+def getDecksFromUser(user_id: int):
+    cursor.execute("""
+        SELECT Decks.name, Decks.deck_id
+        FROM User
+        INNER JOIN Decks
+        ON User._id = Decks.user
+        WHERE User._id = %s;
+    """, user_id)
+    return cursor.fetchall()
+
+def getCardsFromDeck(deck_id: int, user_id: int):
+    cursor.execute("""
+        SELECT Cards.prompt, Cards.answer, Cards.card_id
+        FROM Decks
+        INNER JOIN Cards
+        ON Decks.deck_id = Cards.deck
+        WHERE Decks.deck_id = %s AND Decks.user = %s;
+    """, (deck_id, user_id))
+    return cursor.fetchall()
