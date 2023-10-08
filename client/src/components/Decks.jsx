@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react'
-import Deck from './Deck'
-import axios from '../requests/axios'
+import React, { useState, useEffect } from "react";
+import Deck from "./Deck";
+import axios from "../requests/axios";
 
 const Decks = () => {
     const [decks, setDecks] = useState([])
@@ -39,4 +39,18 @@ const Decks = () => {
     
 }
 
-export default Decks
+  return (
+    <div
+      className="relative flex flex-wrap justify-center drop-shadow-2xl"
+      style={{ paddingLeft: "9rem", paddingTop: "2rem" }}
+    >
+      {decks.map((deck, index) => (
+        <div key={deck.deck_id} className="w-1/3 p-4 mt-20 ">
+          <Deck deck={deck} />
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default Decks;

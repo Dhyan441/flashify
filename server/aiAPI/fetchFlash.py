@@ -5,10 +5,12 @@ from dotenv import find_dotenv, load_dotenv
 dotenv_path = find_dotenv()
 load_dotenv(dotenv_path)
 
-def flashCards (input) -> list[dict]:
-    api_key = os.getenv("OpenAI_KEY", default=None)
 
-    prompt = "Give me an array of 5 objects with fields prompt and answer where prompt has the question and answer has the answer use this input as the material:" + input
+def flashCards (input_texts) -> list[dict]:
+    api_key = "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" 
+    notes = str(input_texts)
+    print("notes: ", notes)
+    prompt = "Give me an array of 5 objects with fields prompt and answer where prompt has the question and answer has the answer use this input as the material:" + notes
 
     response = openai.Completion.create(
         engine="text-davinci-002",
