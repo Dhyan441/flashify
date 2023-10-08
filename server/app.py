@@ -3,12 +3,17 @@ from flask import Flask, request, jsonify, session
 import pymysql.cursors
 from dotenv import find_dotenv, load_dotenv
 import bcrypt
-from functools import wraps
+# from functools import wraps
 from flask_cors import CORS
+
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import jwt_required
+from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', default=None)
-CORS(app) 
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 dotenv_path = find_dotenv()
 load_dotenv(dotenv_path)
@@ -18,7 +23,6 @@ CLOUD_SQL_PASSWORD = os.getenv('CLOUD_SQL_PASSWORD', default=None)
 CLOUD_SQL_DATABASE_NAME = os.getenv('CLOUD_SQL_DATABASE_NAME', default=None)
 CLOUD_SQL_CONNECTION_NAME = os.getenv('CLOUD_SQL_CONNECTION_NAME', default=None)
 CLOUD_SQL_PORT = int(os.getenv('CLOUD_SQL_PORT', default=None))
-
 
 connection = pymysql.connect(
                         port=CLOUD_SQL_PORT,
@@ -31,10 +35,24 @@ connection = pymysql.connect(
 
 cursor = connection.cursor()
 
+JWT_SECRET = os.getenv("JWT_SECRET", default=None)
+jwt = JWTManager(app)
+
+revoked_tokens = set()
+
+@token_in_blacklist_loader()
+def is_token_revoked(decoded_token):
+    jti = decoded_token['jti']
+    return jti in revoked_tokens
+
 @app.route("/")
 def hello():
     return "Hello World!"
 
+def create_token(id):
+    access_token = create_access_token(identity=id)
+    return access_token
+    
 # login
 @app.route('/login', methods=['POST'])
 def login():
@@ -48,12 +66,10 @@ def login():
 
         cursor.execute(get_user, (username,))
         user = cursor.fetchone()
-        print(password.encode('utf-8'), user['password'].encode('utf-8'))
-        
+        print(user)
         if user and bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8')):
-            session['user_id'] = user['_id']
-            session['authenticated'] = True
-            return jsonify({"message": "Login successful."}), 200
+            access_token = create_token(user['_id'])
+            return jsonify({"message": "Login successful.", "token": access_token}), 200
         else:
             return jsonify({"message": "Invalid credentials"}), 401
 
@@ -79,33 +95,24 @@ def signup():
         connection.commit()
         return jsonify({"message": "User registered successfully!"}), 200
 
-# login required
-def loginRequired(func):
-    @wraps(func)
-    def decorated_function(*args, **kwargs):
-        if not session.get('authenticated'):
-            return jsonify({"message": "Unauthorized!"}), 401
-        return func(*args, **kwargs)
-    return decorated_function
-
 # logout
 @app.route('/logout', methods=['GET', 'POST'])
-@loginRequired
+@jwt_required()
 def logout():
-    session.pop('user_id', None)
-    session.pop('authenticated')
+    current_user = get_jwt_identity()
+    revoked_tokens.add(current_user)
     return jsonify({"message": "Logout successful!"}), 200
 
 # get users 
 @app.route('/users', methods=['GET'])
-@loginRequired
+@jwt_required()
 def getUsers():
     cursor.execute('SELECT * FROM User')
     return cursor.fetchall()
 
 # create deck
 @app.route('/deck', methods=['POST'])
-@loginRequired
+@jwt_required()
 def createDeck():
     try:
         data = request.get_json()
@@ -113,7 +120,7 @@ def createDeck():
         if not data['name']:
             return jsonify({"message": "Deckname is required"}), 400
         name = data['name']
-        user = session['user_id']
+        user = get_jwt_identity()
         cards = data['cards']
 
         cursor.execute('INSERT INTO Decks (name, user) VALUES (%s, %s)',
@@ -142,7 +149,7 @@ def createCards(cards, deck):
 
 # update deck
 @app.route('/deck', methods=['PATCH'])
-@loginRequired
+@jwt_required()
 def updateDeck():
     try:
         data = request.get_json()
@@ -151,7 +158,7 @@ def updateDeck():
             return jsonify({"message": "Deckname is required"}), 400
         deck_id = data['deck_id']
         name = data['name']
-        user = session['user_id']
+        user = get_jwt_identity()
 
 
         cursor.execute('UPDATE Decks SET name = %s WHERE deck_id = %s AND user = %s',
@@ -164,13 +171,13 @@ def updateDeck():
 
 # delete deck
 @app.route('/deck', methods=['DELETE'])
-@loginRequired
+@jwt_required()
 def deleteDeck():
     try:
         data = request.get_json()
 
         deck_id = data['deck_id']
-        user = session['user_id']
+        user = get_jwt_identity()
 
         # Assuming deck_id is the ID of the deck you want to delete
         cursor.execute('DELETE FROM Cards WHERE deck = %s', (deck_id,))
@@ -186,11 +193,11 @@ def deleteDeck():
     
 # get decks
 @app.route('/decks', methods=['GET'])
-@loginRequired
+@jwt_required()
 def getDecks():
     try:
-        user = session['user_id']
-
+        user = get_jwt_identity()
+        print(user)
         decks = getDecksFromUser(user)
         return jsonify(decks)
     except Exception as e:
@@ -198,7 +205,7 @@ def getDecks():
     
 # get cards from deck
 @app.route('/cards', methods=['GET'])
-@loginRequired
+@jwt_required()
 def getCards():
     try:
         deck = request.args.get('deck')
@@ -208,6 +215,11 @@ def getCards():
         return jsonify(decks)
     except Exception as e:
         return jsonify({"message": "Failed to get decks", "error": str(e)}), 500
+    
+@app.route('/file', methods=['POST'])
+@jwt_required()
+def uploadFilethingy():
+    return
     
 def getDecksFromUser(user_id: int):
     cursor.execute("""
