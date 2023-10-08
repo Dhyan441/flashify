@@ -1,18 +1,41 @@
-import React, { useState } from "react";
-import FlashCard from "./FlashCard"; // Update the import path as needed
-import { LeftButton, RightButton } from "./NavigationButtons"; // Update the import path as needed
+import React, { useState, useEffect } from "react";
+import FlashCard from "./FlashCard";
+import { LeftButton, RightButton } from "./NavigationButtons";
+import axios from "../requests/axios"
+import { useParams } from 'react-router-dom';
 
 function StudyPage() {
-  const flashcards = [
+  let {deck_id} = useParams();
+  const [flashcards, setFlashCards] = useState([
     {
-      question: "What is React?",
+      prompt: "What is React?",
       answer: "React is a JavaScript library for building user interfaces.",
+      card_id: "card_id1",
     },
     {
       question: "Question 2",
       answer: "Answer 2",
+      card_id: "card_id2",
     },
-  ];
+  ]);
+
+  useEffect(() => {
+    console.log(process.env.REACT_APP_API_URL);
+    const apiUrl = `/cards?deck=${deck_id}`;
+
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(apiUrl);
+
+        setFlashCards(response.data);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    // Call the async function
+    fetchData();
+  }, []);
 
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
 
