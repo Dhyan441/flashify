@@ -1,10 +1,13 @@
-import React, { useState } from "react";
-import axios from "../requests/axios";
+import React, { useState } from 'react';
+import axios from '../requests/axios';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
 
   const toggleCard = () => {
     setIsLogin(!isLogin);
@@ -24,11 +27,17 @@ const Login = () => {
       const apiUrl = "/login";
       const requestData = {
         username: email,
-
         password,
       };
 
       const response = await axios.post(apiUrl, requestData);
+      console.log(response)
+      if (response.status === 200) {
+        localStorage.setItem("authToken", response.data["token"])
+        navigate('/app/upload')
+      }else{
+        alert("Invalid credentials")
+      }
 
       console.log("Login response:", response.data);
     } catch (error) {
