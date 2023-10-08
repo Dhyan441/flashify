@@ -1,12 +1,12 @@
-import React from 'react';
+import React from "react";
 
 function LeftButton({ onClick, disabled }) {
   return (
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`px-4 py-2 mx-1.5 bg-blue-500 text-white rounded hover:bg-blue-600 ${
-        disabled ? 'cursor-not-allowed opacity-50' : ''
+      className={`px-4 py-2 mx-1.5 bg-primary-light text-primary-background rounded hover:bg-primary-dark ${
+        disabled ? "cursor-not-allowed opacity-50" : ""
       }`}
     >
       Previous Card
@@ -19,8 +19,8 @@ function RightButton({ onClick, disabled }) {
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`px-4 py-2 mx-1.5 bg-blue-500 text-white rounded hover:bg-blue-600 ${
-        disabled ? 'cursor-not-allowed opacity-50' : ''
+      className={`px-4 py-2 mx-1.5 bg-primary-light text-primary-background rounded hover:bg-primary-dark ${
+        disabled ? "cursor-not-allowed opacity-50" : ""
       }`}
     >
       Next Card

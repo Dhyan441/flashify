@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import FlashCard from './FlashCard'; // Update the import path as needed
-import { LeftButton, RightButton } from './NavigationButtons'; // Update the import path as needed
+import React, { useState } from "react";
+import FlashCard from "./FlashCard"; // Update the import path as needed
+import { LeftButton, RightButton } from "./NavigationButtons"; // Update the import path as needed
 
 function StudyPage() {
   const flashcards = [
     {
-      question: 'What is React?',
-      answer: 'React is a JavaScript library for building user interfaces.',
+      question: "What is React?",
+      answer: "React is a JavaScript library for building user interfaces.",
     },
     {
-      question: 'Question 2',
-      answer: 'Answer 2',
+      question: "Question 2",
+      answer: "Answer 2",
     },
   ];
 
@@ -29,7 +29,7 @@ function StudyPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-white">
+    <div className="flex flex-col items-center justify-center h-[80vh] bg-white">
       <FlashCard
         question={flashcards[currentCardIndex].question}
         answer={flashcards[currentCardIndex].answer}
