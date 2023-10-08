@@ -8,6 +8,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "autoprefixer": "^10.4.16",
+    "aws-sdk": "^2.1472.0",
     "axios": "^1.5.1",
     "builtin-modules": "^3.3.0",
     "postcss": "^8.4.31",
