@@ -4,12 +4,12 @@ const Upload = () => {
   return (
     <div>
       <div class="bg-primary-background h-[80vh] w-screen flex items-center justify-center">
-        <div class="max-w-lg w-4/5 max-h-lg bg-white p-8 rounded-lg shadow-lg">
+        <div class="max-w-lg w-4/5 max-h-lg bg-secondary-light p-8 rounded-lg shadow-lg">
           <div className="mr-4 ml-4">
             <div class="mb-10 mt-12">
               <label
                 for="postContent"
-                class="block text-primary-dark text-sm font-bold mb-2"
+                class="block text-primary-dark bg-secondary-light text-sm font-bold mb-2"
               >
                 Title:
               </label>
@@ -17,8 +17,8 @@ const Upload = () => {
                 id="postContent"
                 name="postContent"
                 rows="1"
-                class="w-full border-2 rounded-md pt-4 pb-4 px-4 py-2 leading-5 transition duration-150 ease-in-out sm:text-sm
-                sm:leading-5 resize-none focus:outline-none focus:border-primary-main"
+                class="w-full border-2 border-secondary-main rounded-md pt-4 pb-4 px-4 py-2 leading-5 transition duration-150 ease-in-out sm:text-sm
+                sm:leading-5 resize-none focus:outline-none focus:border-primary-main bg-secondary-light"
                 placeholder=""
               ></textarea>
             </div>
@@ -30,7 +30,7 @@ const Upload = () => {
               >
                 Photo:
               </label>
-              <div class="relative border-2 rounded-md px-4 py-3 bg-white flex items-center justify-between hover:border-primary-main transition duration-150 ease-in-out">
+              <div class="relative border-2 border-secondary-main rounded-md px-4 py-3 bg-secondary-light flex items-center justify-between hover:border-primary-main transition duration-150 ease-in-out">
                 <input
                   type="file"
                   id="fileAttachment"
@@ -62,7 +62,7 @@ const Upload = () => {
             <div class="flex items-center justify-between mb-12">
               <button
                 type="submit"
-                class="flex justify-center items-center bg-primary-main hover:bg-primary-dark focus:outline-none focus:shadow-outline-blue text-primary-background py-2 px-4 rounded-md transition duration-300 gap-2 active:scale-[.98] active:duration-75 hover:scale-[1.02] ease-in-out "
+                class="flex justify-center items-center bg-primary-light hover:bg-primary-dark focus:outline-none focus:shadow-outline-blue text-primary-background py-2 px-4 rounded-md transition duration-300 gap-2 active:scale-[.98] active:duration-75 hover:scale-[1.02] ease-in-out "
               >
                 {" "}
                 Create Deck{" "}

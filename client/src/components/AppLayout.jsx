@@ -13,9 +13,7 @@ const AppLayout = () => {
       <div className="flex">
         <TopBar />
       </div>
-      <div className="flex">
-        <Upload />
-      </div>
+
       <div className="content">
         <Outlet />
       </div>
