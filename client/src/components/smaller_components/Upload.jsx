@@ -65,6 +65,7 @@ const Upload = () => {
           },
         });
         console.log(response);
+        alert("Deck created successfully.");
       }
       catch (error) {
         console.error("Error:", error);
@@ -74,8 +75,6 @@ const Upload = () => {
 
     try {
       await upload;
-      // File successfully uploaded
-      alert("File uploaded successfully.");
       handleNameUpload();
     } catch (error) {
       console.error(error);
