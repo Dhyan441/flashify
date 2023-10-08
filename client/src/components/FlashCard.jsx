@@ -24,7 +24,7 @@ function FlashCard({ question, answer }) {
   }, [question, answer, showAnswer]);
 
   return (
-    <div className="flex items-center justify-center h-screen bg-white">
+    <div className="flex items-center justify-center bg-white">
       <div
         className={`w-96 h-60 p-4 cursor-pointer transform transition-transform transition-duration-500 ${
           showAnswer ? 'rotate-y-180' : ''
