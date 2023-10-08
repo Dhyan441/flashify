@@ -12,15 +12,15 @@ const Upload = () => {
   // Function to upload file to S3
   const uploadFile = async () => {
     // S3 Bucket Name
-    const S3_BUCKET = "flashify";
+    const S3_BUCKET = process.env.REACT_APP_AWS_S3_BUCKET_NAME;
 
     // S3 Region
-    const REGION = "us-east-1";
+    const REGION = process.env.REACT_APP_AWS_REGION;
 
     // S3 Credentials
     AWS.config.update({
-      accessKeyId: "AKIASXENGQHXR3FUUYHK",
-      secretAccessKey: "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",
+      accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
     });
     const s3 = new AWS.S3({
       params: { Bucket: S3_BUCKET },
