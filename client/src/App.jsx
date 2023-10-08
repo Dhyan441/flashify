@@ -4,6 +4,7 @@ import "./index.css";
 import AppLayout from "./components/AppLayout";
 import Decks from "./components/Decks";
 import Login from './components/Login';
+import Study from "./components/Study";
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           {/*<Route path="/signup" element={<SignUp />} /> */}
           {/* <Route path="*" element={<ErrorPage />} /> */}
+          <Route path="/study" element={<Study />} />
         </Routes>
       </Router>
       {/* <Dashboard /> */}
