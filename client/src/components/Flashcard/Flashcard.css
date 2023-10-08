@@ -1,0 +1,26 @@
+.flash-card {
+    width: 200px;
+    height: 150px;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .flash-card:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .flash-card-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+  
+  .show-answer {
+    background-color: #efffe0; /* Change the background color for answers */
+  }
+  
