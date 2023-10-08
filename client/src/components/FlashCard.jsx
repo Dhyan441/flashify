@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 function FlashCard({ question, answer }) {
-    useEffect(() => {
-        console.log(question, answer)
-    }, [question, answer])
+  useEffect(() => {
+    console.log(question, answer);
+  }, [question, answer]);
 
   const [showAnswer, setShowAnswer] = useState(false);
   const [fontSize, setFontSize] = useState(1); // Initial font size
@@ -24,23 +24,23 @@ function FlashCard({ question, answer }) {
   }, [question, answer, showAnswer]);
 
   return (
-    <div className="flex items-center justify-center bg-white">
+    <div className="flex items-center justify-center bg-secondary-main">
       <div
-        className={`w-96 h-60 p-4 cursor-pointer transform transition-transform transition-duration-500 ${
-          showAnswer ? 'rotate-y-180' : ''
+        className={`w-[40vw] h-96 p-4 cursor-pointer transform transition-transform transition-duration-1000 ${
+          showAnswer ? "rotate-y-180" : ""
         }`}
         onClick={toggleAnswer}
         style={{
-          backgroundColor: 'white',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
+          backgroundColor: "white",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
         <div className="w-full h-full relative">
           <div
-            className={`card-side front absolute inset-0 flex items-center justify-center bg-white rounded-3xl shadow-lg transition-opacity ${
-              showAnswer ? 'opacity-0' : 'opacity-100'
+            className={`card-side front  absolute inset-0 flex items-center justify-center bg-secondary-light rounded-3xl shadow-lg transition-opacity ${
+              showAnswer ? "opacity-0" : "opacity-100"
             }`}
           >
             <div className="p-4">
@@ -57,8 +57,8 @@ function FlashCard({ question, answer }) {
             </div>
           </div>
           <div
-            className={`card-side back absolute inset-0 flex items-center justify-center bg-gray-200 rounded-3xl shadow-lg transition-opacity ${
-              showAnswer ? 'opacity-100' : 'opacity-0'
+            className={`card-side back absolute inset-0 flex items-center justify-center bg-primary-light text-primary-background rounded-3xl shadow-lg transition-opacity ${
+              showAnswer ? "opacity-100" : "opacity-0"
             }`}
           >
             <div className="p-4">

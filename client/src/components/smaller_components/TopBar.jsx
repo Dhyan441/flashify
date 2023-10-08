@@ -6,9 +6,8 @@ const SideBarIcon = ({ icon }) => (
 
 const TopBar = () => {
   return (
-    <div className="flex align-top w-full sticky top-0 h-24 m-0 bg-primary-light shadow-lg">
+    <div className="flex align-top w-full sticky top-0 h-24 m-0 bg-primary-background shadow-lg">
       <SideBarIcon icon={<MdLogout size="30" />} />
-      
     </div>
   );
 };
