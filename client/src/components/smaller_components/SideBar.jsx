@@ -8,9 +8,9 @@ const SideBarIconTop = ({ icon }) => <div className="sidebar-icon mt-24">{icon}<
 const SideBar = () => {
   return (
     <div className="fixed top-0 left-0 h-screen w-36 m-0 flex flex-col bg-primary-main text-white shadow-lg z-[100]">
-      <SideBarIconTop icon={<BsCloudUpload size="30" />} />
-      <SideBarIcon icon={<BsCardList size="30" />} />
-      <SideBarIcon icon={<FaPencilAlt size="30" />} />
+      <a href="/app/upload"><SideBarIconTop icon={<BsCloudUpload size="30" />} /></a>
+      <a href="/app/decks"><SideBarIcon icon={<BsCardList size="30" />} /></a>
+      <a href="/app/study"><SideBarIcon icon={<FaPencilAlt size="30" />} /></a>
     </div>
   );
 };
