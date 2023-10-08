@@ -45,6 +45,29 @@ const Login = () => {
     }
   };
 
+  const handleSignup = async () => {
+    try {
+      const apiUrl = "/signup";
+      const requestData = {
+        username: email,
+        password,
+      };
+
+      const response = await axios.post(apiUrl, requestData);
+      console.log(response)
+      if (response.status === 201) {
+        localStorage.setItem("authToken", response.data["token"])
+        navigate('/app/upload')
+      }else{
+        alert("Invalid credentials")
+      }
+
+      console.log("Login response:", response.data);
+    } catch (e) {
+      console.error("Error:", e);
+    }
+  }
+
   return (
     <div className="flex w-full h-screen bg-primary-background">
       <div className="w-full flex items-center justify-center lg:w-1/2">
@@ -59,11 +82,11 @@ const Login = () => {
           </p>
           <div className="mt-8">
             <label className="text-lg font-medium text-primary-dark">
-              Email
+              Username
             </label>
             <input
               type="text"
-              placeholder="Enter your email"
+              placeholder="Enter your username"
               className="w-full bottom-2 border border-gray-500 rounded-xl p-4 mt-1 bg-transparent"
               value={email}
               onChange={handleEmailChange}
@@ -96,7 +119,7 @@ const Login = () => {
           </div>
           <div className="mt-8 flex flex-col gap-y-4">
             <button
-              onClick={handleLogin}
+              onClick={() => isLogin ? handleLogin() : handleSignup()}
               className="active:scale-[.98] active:duration-75 hover:bg-primary-dark hover:scale-[1.02] ease-in-out transition-all py-3 rounded-xl bg-primary-light text-primary-background text-lg font-bold"
             >
               {isLogin ? "Sign in" : "Sign up"}

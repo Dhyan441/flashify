@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 
-function FlashCard({ question, answer }) {
+function FlashCard({ showAnswer, setShowAnswer, question, answer }) {
   useEffect(() => {
     console.log(question, answer);
   }, [question, answer]);
 
-  const [showAnswer, setShowAnswer] = useState(false);
+  // const [showAnswer, setShowAnswer] = useState(false);
   const [fontSize, setFontSize] = useState(1); // Initial font size
 
   const toggleAnswer = () => {

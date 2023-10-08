@@ -5,27 +5,29 @@ import axios from "../requests/axios"
 import { useParams } from 'react-router-dom';
 
 function StudyPage() {
-  let {deck_id} = useParams();
-  const [flashcards, setFlashCards] = useState([
-    {
-      prompt: "What is React?",
-      answer: "React is a JavaScript library for building user interfaces.",
-      card_id: "card_id1",
-    },
-    {
-      question: "Question 2",
-      answer: "Answer 2",
-      card_id: "card_id2",
-    },
-  ]);
+  const [showAnswer, setShowAnswer] = useState(false);
+  const [flashcards, setFlashCards] = useState([]);
+  const authToken = localStorage.getItem("authToken")
 
   useEffect(() => {
+    console.log(flashcards)
+  }, [flashcards])
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+
+    const deckId = queryParams.get('deck');
     console.log(process.env.REACT_APP_API_URL);
-    const apiUrl = `/cards?deck=${deck_id}`;
+    const apiUrl = `/cards?deck=${deckId}`;
 
     const fetchData = async () => {
       try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(apiUrl, {
+          headers: {
+            'Authorization': `Bearer ${authToken}`,
+          },
+        });
+        console.log(response)
 
         setFlashCards(response.data);
       } catch (error) {
@@ -40,6 +42,7 @@ function StudyPage() {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
 
   const nextCard = () => {
+    setShowAnswer(false)
     if (flashcards && currentCardIndex < flashcards.length - 1) {
       setCurrentCardIndex(currentCardIndex + 1);
     }
@@ -54,8 +57,10 @@ function StudyPage() {
   return (
     <div className="flex flex-col items-center justify-center h-[80vh] bg-white">
       <FlashCard
-        question={flashcards[currentCardIndex].question}
-        answer={flashcards[currentCardIndex].answer}
+        question={flashcards[currentCardIndex] ? flashcards[currentCardIndex]["prompt"] : ""}
+        answer={flashcards[currentCardIndex] ? flashcards[currentCardIndex]["answer"] : ""}
+        showAnswer={showAnswer}
+        setShowAnswer={setShowAnswer}
       />
       <div className="mt-0.5 flex flex-row">
         <LeftButton onClick={prevCard} disabled={currentCardIndex === 0} />

@@ -6,6 +6,8 @@ const Upload = () => {
   // Create state to store file and file name
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState("");
+  const [title, setTitle] = useState("");
+  const authToken = localStorage.getItem("authToken")
 
   // Function to upload file to S3
   const uploadFile = async () => {
@@ -54,9 +56,14 @@ const Upload = () => {
         console.log(fileName);
         const apiUrl = "/file";
         const requestData= {
-          filename: fileName
+          filename: fileName,
+          title
         };
-        const response = await axios.post(apiUrl, requestData);
+        const response = await axios.post(apiUrl, requestData, {
+          headers: {
+            'Authorization': `Bearer ${authToken}`,
+          },
+        });
         console.log(response);
       }
       catch (error) {
@@ -87,6 +94,11 @@ const Upload = () => {
     setFileName(selectedFile.name);
   };
 
+  const handleTitleChange = (e) => {
+    setTitle(e.target.value);
+  };
+
+
   return (
     <div>
       <div className="bg-primary-background h-[80vh] w-screen flex items-center justify-center">
@@ -106,6 +118,8 @@ const Upload = () => {
                 className="w-full border-2 border-secondary-main rounded-md pt-4 pb-4 px-4 py-2 leading-5 transition duration-150 ease-in-out sm:text-sm
                 sm:leading-5 resize-none focus:outline-none focus:border-primary-main bg-secondary-light"
                 placeholder=""
+                value={title}
+                onChange={handleTitleChange}
               ></textarea>
             </div>
 

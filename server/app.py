@@ -11,6 +11,10 @@ from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
 
+import textData
+import json
+
+
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', default=None)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
@@ -92,7 +96,9 @@ def signup():
         cursor.execute('INSERT INTO User (username, password) VALUES (%s, %s)',
                        (username, hashed_password))
         connection.commit()
-        return jsonify({"message": "User registered successfully!"}), 200
+        id = cursor.lastrowid
+        access_token = create_token(id)
+        return jsonify({"message": "User registered successfully!", "token": access_token}), 201
 
 # logout
 @app.route('/logout', methods=['GET', 'POST'])
@@ -102,6 +108,15 @@ def logout():
     revoked_tokens.add(current_user)
     return jsonify({"message": "Logout successful!"}), 200
 
+# isLoggedIn
+@app.route('/isLoggedIn', methods=['GET', 'POST'])
+@jwt_required()
+def isLoggedIn():
+    current_user = get_jwt_identity()
+    if (current_user):
+        return jsonify({"message": "Logout successful!"}), 200
+    return jsonify({"message": "Not logged in!"}), 401
+
 # get users 
 @app.route('/users', methods=['GET'])
 @jwt_required()
@@ -110,18 +125,24 @@ def getUsers():
     return cursor.fetchall()
 
 # create deck
-@app.route('/deck', methods=['POST'])
-@jwt_required()
-def createDeck():
+# @app.route('/deck', methods=['POST'])
+# @jwt_required()
+# def handleCreateDeck():
+#     try:
+#         data = request.get_json()
+
+#         if not data['name']:
+#             return jsonify({"message": "Deckname is required"}), 400
+#         name = data['name']
+#         user = get_jwt_identity()
+#         cards = data['cards']
+#         createDeck(name, user,cards)
+#     except Exception as e:
+#         return jsonify({"message": "Failed to create deck", "error": str(e)}), 500
+
+
+def createDeck(name, user, cards):
     try:
-        data = request.get_json()
-
-        if not data['name']:
-            return jsonify({"message": "Deckname is required"}), 400
-        name = data['name']
-        user = get_jwt_identity()
-        cards = data['cards']
-
         cursor.execute('INSERT INTO Decks (name, user) VALUES (%s, %s)',
                         (name, user))
         connection.commit()
@@ -134,6 +155,7 @@ def createDeck():
         return jsonify({"message": "Failed to create deck", "error": str(e)}), 500
 
 def createCards(cards, deck):
+    print(cards, deck)
     try:
         for card in cards:
             prompt = card['prompt']
@@ -196,8 +218,8 @@ def deleteDeck():
 def getDecks():
     try:
         user = get_jwt_identity()
-        print(user)
         decks = getDecksFromUser(user)
+        print()
         return jsonify(decks)
     except Exception as e:
         return jsonify({"message": "Failed to get decks", "error": str(e)}), 500
@@ -207,10 +229,10 @@ def getDecks():
 @jwt_required()
 def getCards():
     try:
+        print(request.args)
         deck = request.args.get('deck')
-
-        decks = getCardsFromDeck(deck)
-
+        user = get_jwt_identity()
+        decks = getCardsFromDeck(deck, user)
         return jsonify(decks)
     except Exception as e:
         return jsonify({"message": "Failed to get decks", "error": str(e)}), 500
@@ -218,7 +240,15 @@ def getCards():
 @app.route('/file', methods=['POST'])
 @jwt_required()
 def uploadFilethingy():
-    return
+    data = request.get_json()
+    filename = data['filename']
+    title = data['title']
+    user = get_jwt_identity()
+    res = textData.formattedCards(filename)
+    print(title, res)
+    cards = json.loads(res)
+    createDeck(title, user, cards)
+    return res
     
 def getDecksFromUser(user_id: int):
     cursor.execute("""

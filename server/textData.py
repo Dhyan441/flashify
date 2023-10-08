@@ -2,7 +2,7 @@ import fetchFlash
 import json
 import requests
 
-def formatedCards(fileName):
+def formattedCards(fileName):
   path = "https://flashify.s3.amazonaws.com/" + fileName
   url = "https://api.apilayer.com/image_to_text/url?url="+path 
 
@@ -20,4 +20,3 @@ def formatedCards(fileName):
 
   answer = fetchFlash.flashCards(alltext)
   return answer
-
