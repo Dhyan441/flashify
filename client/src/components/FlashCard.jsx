@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
 function FlashCard({ question, answer }) {
+    useEffect(() => {
+        console.log(question, answer)
+    }, [question, answer])
+
   const [showAnswer, setShowAnswer] = useState(false);
   const [fontSize, setFontSize] = useState(1); // Initial font size
 
@@ -11,7 +15,7 @@ function FlashCard({ question, answer }) {
   useEffect(() => {
     // Calculate the length of the text (question or answer)
     const text = showAnswer ? answer : question;
-    const textLength = text.length;
+    const textLength = text == undefined ? 0 : text.length;
 
     // Adjust the font size based on text length with a minimum font size of 14px
     const calculatedFontSize = Math.max(20, 30 - textLength * 0.5);

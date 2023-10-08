@@ -1,10 +1,11 @@
 import React from 'react';
-import FlashCard from './components/FlashCard';
+import StudyPage from './components/StudyPage';
 
 function App() {
+
     return (
       <div className="App">
-        <FlashCard question="question" answer="answer"/>
+        <StudyPage />
       </div>
     );
   }
